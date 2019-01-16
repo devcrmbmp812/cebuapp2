@@ -6,9 +6,10 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 
-const Booking = ({ activeRoute }) => (
+const Booking = ({ activeRoute, login }) => (
   <ScrollView contentContainerStyle={styles.view}>
     <Text style={styles.header1}>{activeRoute.name}</Text>
+    <Text style={styles.header1}>{login}</Text>
     <Text style={styles.text}>Welcome! Here you can book your next trip!!</Text>
   </ScrollView>
 );
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   activeRoute: state.routes.activeRoute,
+  login: state.routes.login,
 });
 
 export default connect(

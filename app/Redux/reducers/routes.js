@@ -7,6 +7,7 @@ const routeState = {
   routes : routesMap,
   navigator: null,
   activeRouteKey: routesMap[0].name,
+  login: 'abc',
 };
 
 const routes = (state = routeState, action) => {

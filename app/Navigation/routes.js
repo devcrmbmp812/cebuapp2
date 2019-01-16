@@ -1,4 +1,4 @@
-import TravelScreen from '../Views/Travel';
+import BetResultScreen from '../Views/Travel';
 import BookingScreen from '../Views/Booking';
 import AboutScreen from '../Views/About';
 import CreditsScreen from '../Views/Credits';
@@ -8,7 +8,7 @@ import CreditsScreen from '../Views/Credits';
   To omit the icon just pass null on its value.
 */
 export default [
-  {name: 'Bet Result', screen: TravelScreen, icon: 'view-list'},
+  {name: 'Bet Result', screen: BetResultScreen, icon: 'view-list'},
   {name: 'Drawing', screen: BookingScreen, icon: 'drawing'},
   {name: 'My Bet History', screen: AboutScreen, icon: 'database'},
   {name: 'About', screen: AboutScreen, icon: 'face-profile'},
