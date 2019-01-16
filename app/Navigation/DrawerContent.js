@@ -23,11 +23,11 @@ const DrawerContent = ({ navigateTo, activeRoute, routes, closeDrawer }) => (
   <ScrollView>
     <View style={styles.header}>
       <View style={styles.headerLogo}>
-        <Icon name="airplane-takeoff" size={50} color={drawerLogoColor} />
+        <Icon name="gamepad" size={50} color={drawerLogoColor} />
       </View>
       <View style={styles.subTitle}>
-        <Text style={styles.drawerTitle}>Travel App</Text>
-        <Text style={styles.drawerEmail}>pablodarde@gmail.com</Text>
+        <Text style={styles.drawerTitle}>Cebuboss App</Text>
+        <Text style={styles.drawerEmail}>howard.lazarte@gmail.com</Text>
       </View>
     </View>
     {routes.map(route => (

@@ -8,8 +8,10 @@ import CreditsScreen from '../Views/Credits';
   To omit the icon just pass null on its value.
 */
 export default [
-  {name: 'Travel', screen: TravelScreen, icon: 'airplane-takeoff'},
-  {name: 'Booking', screen: BookingScreen, icon: 'compass-outline'},
-  {name: 'About', screen: AboutScreen, icon: 'information-outline'},
+  {name: 'Bet Result', screen: TravelScreen, icon: 'view-list'},
+  {name: 'Drawing', screen: BookingScreen, icon: 'drawing'},
+  {name: 'My Bet History', screen: AboutScreen, icon: 'database'},
+  {name: 'About', screen: AboutScreen, icon: 'face-profile'},
   {name: 'Credits', screen: CreditsScreen, icon: 'account-circle'},
+  {name: 'Sign Out', screen: CreditsScreen, icon: 'power'},
 ];

@@ -25,7 +25,7 @@ const Travel = ({ activeRoute, navigateTo }) => (
           <Button
             title="Book your trip"
             style={styles.button}
-            onPress={() => { navigateTo('Booking'); }}
+            onPress={() => { navigateTo('Drawing'); }}
           />
       </ScrollView>
     </ImageBackground>
