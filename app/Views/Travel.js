@@ -6,14 +6,13 @@ import {
     Text,
     Button,
     ImageBackground,
+    View
 } from 'react-native';
 
 import {
   Container,
   Spinner,
   StyleProvider,
-  Tabs,
-  Tab
 } from "native-base";
 
 import material from "../native_theme/variables/material";
@@ -22,33 +21,55 @@ import strings from "../resources/strings";
 import consts from "../const";
 import colors from "../resources/colors";
 import dimens from "../resources/dimens";
+import styles from "../resources/styles";
 
-import * as Api from "../api";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigateTo } from '../Redux/actions';
-const backgroundImage = require('../img/bg_travel.jpeg');
 
+import * as Api from "../api";
+import DrawResultListItem from "./DrawResultListItem";
 
-
-export class Travel extends Component {
+export class BetResult extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      progressStatus : true,
+      drawresult: [],
+    }
     this.getDrawResultApi = this.getDrawResultApi.bind(this);
   }
 
   componentDidMount() {
-    this.getDrawResultApi();
+    let token = 'temp_token';
+    this.getDrawResultApi(token, 1, consts.BASE_PAGE_LIMIT);;
   }
 
-  async getDrawResultApi() {
-    const response = await Api.getDrawresults();
-    console.warn('response', response);
-    this.setState({
-
-    })
+  async getDrawResultApi(token, start, limit) {
+    const response = await Api.getDrawresults(token, start, limit);
+    if(response) {
+      const data = start === 1 ? response : this.state.drawresult.concat(response);
+      this.setState({
+        drawresult: data,
+        progressStatus: false,
+      });
+    }
+    
   }
+
+  _keyExtractor = (item, index) => item.id;
+
+  _renderItem = ({ item }) => (
+    <DrawResultListItem
+      id={item.id}
+      drawdate={item.drawdate}
+      drawtime={item.drawtime}
+      winners={item.winners}
+      result={item.result}
+      navigation={this.props.navigation}
+    />
+  );
 
   render() {
     return (
@@ -59,32 +80,73 @@ export class Travel extends Component {
           style={repositoriesListStyles.screenStyle}
         >
           
-          <ImageBackground
+          {/* <ImageBackground
             source={backgroundImage}
-            style={styles.container}
+            style={repositoriesListStyles.container}
             imageStyle={{ opacity: 0.3 }}
           >
-            <ScrollView contentContainerStyle={styles.view}>
+            <ScrollView contentContainerStyle={repositoriesListStyles.view}> */}
                 <FlatList
-                  data={[{key: 'a'}, {key: 'b'}]}
-                  renderItem={({item}) => <Text>{item.key}</Text>}
+                  data={this.state.drawresult}
+                  onEndReachedThreshold={0.01}
+                  keyExtractor={this._keyExtractor}
+                  renderItem={this._renderItem}
+                  onEndReached={() => this.dispatchGetRepos()}
+                  ItemSeparatorComponent={() => (
+                    <View style={repositoriesListStyles.itemSeparatorStyle} />
+                  )}
                 />
-                <Text style={styles.header1}>{this.props.activeRoute.name}</Text>
-                <Text style={styles.header1}>{this.props.login}</Text>
-                <Text style={styles.text}>
+                {/* <Text style={repositoriesListStyles.header1}>{this.props.activeRoute.name}</Text>
+                <Text style={repositoriesListStyles.header1}>{this.props.login}</Text>
+                <Text style={repositoriesListStyles.text}>
                     Book your next trip by clicking the button below.
                 </Text>
                 <Button
                   title="Book your trip"
-                  style={styles.button}
+                  style={repositoriesListStyles.button}
                   onPress={() => { this.props.navigateTo('Drawing'); }}
-                />
-            </ScrollView>
-          </ImageBackground>
+                /> */}
+                {this.renderProgress()}
+            {/* </ScrollView>
+          </ImageBackground> */}
         </Container>
         
       </StyleProvider>
       
+    );
+  }
+
+  dispatchGetRepos() {
+    let token = 'temp_token';
+    this.getDrawResultApi(
+      token, 
+      this.getNextListPage(),
+      consts.BASE_PAGE_LIMIT
+    );
+  }
+
+  getNextListPage() {
+    return (
+      Math.ceil(this.state.drawresult.length / consts.BASE_PAGE_LIMIT) + 1
+    );
+  }
+
+  renderProgress() {
+    if (this.state.progressStatus) {
+      return this.spinner();
+    } else {
+      return null;
+    }
+  }
+
+  spinner() {
+    return (
+      <Spinner
+        color={colors.accentColor}
+        animating={true}
+        size={"large"}
+        style={styles.progressStyle}
+      />
     );
   }
 
@@ -129,10 +191,35 @@ const repositoriesListStyles = {
   dialogTitleTextStyle: {
     fontSize: 20,
     color: "black"
-  }
+  },
+
+  container: {
+    flex: 1,
+    resizeMode: 'cover',
+    backgroundColor: '#ECEFF1',
+  },
+  view: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      marginTop: 40,
+      padding: 20,
+  },
+  header1: {
+      fontSize: 28,
+      marginBottom: '30%',
+  },
+  text: {
+      fontSize: 20,
+      width: '70%',
+      textAlign: 'center',
+      lineHeight: 30,
+      marginBottom: '10%',
+  },
 };
 
-Travel.propTypes = {
+BetResult.propTypes = {
   activeRoute: PropTypes.shape({
     name: PropTypes.string.isRequired,
     screen: PropTypes.any.isRequired,
@@ -141,32 +228,6 @@ Travel.propTypes = {
   navigateTo: PropTypes.func.isRequired,
 };
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      resizeMode: 'cover',
-      backgroundColor: '#ECEFF1',
-    },
-    view: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginTop: 40,
-        padding: 20,
-    },
-    header1: {
-        fontSize: 28,
-        marginBottom: '30%',
-    },
-    text: {
-        fontSize: 20,
-        width: '70%',
-        textAlign: 'center',
-        lineHeight: 30,
-        marginBottom: '10%',
-    },
-});
 
 const mapStateToProps = state => ({
   activeRoute: state.routes.activeRoute,
@@ -180,5 +241,5 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Travel);
+)(BetResult);
 
