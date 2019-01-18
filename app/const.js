@@ -13,7 +13,8 @@ export default {
     "Content-Type": "multipart/form-data"
   },
   BASE_PAGE_LIMIT: 10,
-  API_ENDPOINT: 'http://192.168.10.109/api/',
+  //API_ENDPOINT: 'http://192.168.10.109/api/',
+  API_ENDPOINT: 'http://cebuboss.online/ciadmin/api/',
   LOGIN_SCREEN: 'Login',  
   SIGNUP_SCREEN: 'Signup',
   DRAWRESULT_SCREEN: 'DrawResult',

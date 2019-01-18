@@ -12,13 +12,11 @@ import {
   Dimensions
 } from "react-native";
 import consts from "../const";
-//import circleImage from "../images/circle.png";
+
 import logoImage from "../img/logo.png";
 import colors from "../resources/colors";
 const { height, width } = Dimensions.get("window");
-export default class DrawResultListItem extends React.PureComponent {
-  _onPress = () => {
-  };
+export default class MyDrawListItem extends React.PureComponent {
 
   _getChar = (string,index) => {
     return string.split('')[index];
@@ -39,17 +37,17 @@ export default class DrawResultListItem extends React.PureComponent {
             <Text style={itemStyles.itemTitleStyle}>{this.props.drawtime}  {this.props.drawdate}</Text>
             <View style={itemStyles.container}>
               <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,0): 0}</Text>
+                <Text style={{color:'white', fontSize: 30}}>{this.props.betnumber? this._getChar(this.props.betnumber,0) : 0}</Text>
               </View>
               <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,1): 0}</Text>
+                <Text style={{color:'white', fontSize: 30}}>{this.props.betnumber? this._getChar(this.props.betnumber,1) : 0}</Text>
               </View>
               <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,2): 0}</Text>
+                <Text style={{color:'white', fontSize: 30}}>{this.props.betnumber? this._getChar(this.props.betnumber,2) : 0}</Text>
               </View>
             </View>
             <Text style={itemStyles.itemDescriptionStyle}>
-              Winners {this.props.winners}
+              Bet Amount {this.props.betamount}
             </Text>
           </View>
         </View>
@@ -64,23 +62,15 @@ const itemStyles = {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    // paddingLeft: width / 40,
-    // paddingRight: width / 40,
-    // paddingTop: width / 40,
     backgroundColor: colors.whiteColor,
   },
   rightpanel: {
     paddingLeft: width/40,
   },
   leftpanel: {
-     //flex: 1,
-     //flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
     padding: width/40,
-    //justifyContent: "space-between",
-    //paddingLeft: width/30,
-    //width: width/2
   },
   logoimage: {
     height: 70,
@@ -99,7 +89,6 @@ const itemStyles = {
 
   },
   itemStyle: {
-    //marginHorizontal: 4,
     borderColor: "lightgrey",
     elevation: 4,
     borderRadius: 4,

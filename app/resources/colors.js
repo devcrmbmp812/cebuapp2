@@ -3,6 +3,7 @@
  */
 export default {
   primaryColor: 'black',
+  whiteColor: 'white',
   primaryColorDark: '#16181C',
   accentColor: '#ec1f27',
   circleColor: '#ff00ff'

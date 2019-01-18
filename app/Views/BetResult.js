@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import {
-  View,
-  ScrollView,
-  Text,
-  Linking,
-  StyleSheet,
-  FlatList,
+    ScrollView,
+    StyleSheet,
+    FlatList,
+    Text,
+    Button,
+    ImageBackground,
+    View
 } from 'react-native';
 
 import {
@@ -26,26 +27,53 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigateTo } from '../Redux/actions';
 
-import CreditListItem from "./CreditListItem";
-
 import * as Api from "../api";
+import DrawResultListItem from "./DrawResultListItem";
 
-export class Credits extends Component {
+export class BetResult extends Component {
 
   constructor(props) {
     super(props);
+    _isMounted = false;
     this.state = {
-      drawresult: [{"id": "1", "coin": '10', "cash": "10$"}, {"id": "2", "coin": '50', "cash": "40$"}, {"id": "3", "coin": "100", "cash": "80$"}],
+      progressStatus : true,
+      drawresult: [],
     }
+    this.getDrawResultApi = this.getDrawResultApi.bind(this);
+  }
+
+  componentDidMount() {
+    this._isMounted = true;
+    let token = 'temp_token';
+    this.getDrawResultApi(token, 1, consts.BASE_PAGE_LIMIT);
+  }
+
+  async getDrawResultApi(token, start, limit) {
+    if (this._isMounted) {
+      const response = await Api.getDrawresults(token, start, limit);
+      if(response) {
+        const data = start === 1 ? response : this.state.drawresult.concat(response);
+        this.setState({
+          drawresult: data,
+          progressStatus: false,
+        });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   _keyExtractor = (item, index) => item.id;
 
   _renderItem = ({ item }) => (
-    <CreditListItem
+    <DrawResultListItem
       id={item.id}
-      coin={item.coin}
-      cash={item.cash}
+      drawdate={item.drawdate}
+      drawtime={item.drawtime}
+      winners={item.winners}
+      result={item.result}
       navigation={this.props.navigation}
     />
   );
@@ -68,16 +96,47 @@ export class Credits extends Component {
               <View style={repositoriesListStyles.itemSeparatorStyle} />
             )}
           />
+          {this.renderProgress()}
         </Container>
       </StyleProvider>
     );
   }
+
   dispatchGetRepos() {
     let token = 'temp_token';
+    this.getDrawResultApi(
+      token, 
+      this.getNextListPage(),
+      consts.BASE_PAGE_LIMIT
+    );
   }
-  
-}
 
+  getNextListPage() {
+    return (
+      Math.ceil(this.state.drawresult.length / consts.BASE_PAGE_LIMIT) + 1
+    );
+  }
+
+  renderProgress() {
+    if (this.state.progressStatus) {
+      return this.spinner();
+    } else {
+      return null;
+    }
+  }
+
+  spinner() {
+    return (
+      <Spinner
+        color={colors.accentColor}
+        animating={true}
+        size={"large"}
+        style={styles.progressStyle}
+      />
+    );
+  }
+
+}
 
 const repositoriesListStyles = {
   flatListStyle: {},
@@ -146,6 +205,16 @@ const repositoriesListStyles = {
   },
 };
 
+BetResult.propTypes = {
+  activeRoute: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    screen: PropTypes.any.isRequired,
+    icon: PropTypes.string.isRequired,
+  }).isRequired,
+  navigateTo: PropTypes.func.isRequired,
+};
+
+
 const mapStateToProps = state => ({
   activeRoute: state.routes.activeRoute,
   login: state.routes.login,
@@ -158,4 +227,5 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Credits);
+)(BetResult);
+

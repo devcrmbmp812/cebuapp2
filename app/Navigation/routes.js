@@ -1,5 +1,6 @@
-import BetResultScreen from '../Views/Travel';
-import BookingScreen from '../Views/Booking';
+import BetResultScreen from '../Views/BetResult';
+import DrawingScreen from '../Views/Drawing';
+import MyBetScreen from '../Views/MyBet';
 import AboutScreen from '../Views/About';
 import CreditsScreen from '../Views/Credits';
 
@@ -9,8 +10,8 @@ import CreditsScreen from '../Views/Credits';
 */
 export default [
   {name: 'Bet Result', screen: BetResultScreen, icon: 'view-list'},
-  {name: 'Drawing', screen: BookingScreen, icon: 'drawing'},
-  {name: 'My Bet History', screen: AboutScreen, icon: 'database'},
+  {name: 'Drawing', screen: DrawingScreen, icon: 'drawing'},
+  {name: 'MyBet', screen: MyBetScreen, icon: 'database'},
   {name: 'About', screen: AboutScreen, icon: 'face-profile'},
   {name: 'Credits', screen: CreditsScreen, icon: 'account-circle'},
   {name: 'Sign Out', screen: CreditsScreen, icon: 'power'},

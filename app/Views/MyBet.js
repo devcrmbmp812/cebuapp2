@@ -28,45 +28,61 @@ import { connect } from 'react-redux';
 import { navigateTo } from '../Redux/actions';
 
 import * as Api from "../api";
-import DrawResultListItem from "./DrawResultListItem";
+import MyDrawListItem from "./MyDrawListItem";
 
-export class BetResult extends Component {
+export class MyBet extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       progressStatus : true,
-      drawresult: [],
+      mybetresult: [],
     }
-    this.getDrawResultApi = this.getDrawResultApi.bind(this);
+
+    _isMounted = false;
+    this.getMyBetApi = this.getMyBetApi.bind(this);
   }
 
   componentDidMount() {
+    this._isMounted = true;
     let token = 'temp_token';
-    this.getDrawResultApi(token, 1, consts.BASE_PAGE_LIMIT);;
+    this.getMyBetApi(token, 1, consts.BASE_PAGE_LIMIT);
   }
 
-  async getDrawResultApi(token, start, limit) {
-    const response = await Api.getDrawresults(token, start, limit);
-    if(response) {
-      const data = start === 1 ? response : this.state.drawresult.concat(response);
-      this.setState({
-        drawresult: data,
-        progressStatus: false,
-      });
+  async getMyBetApi(token, start, limit) {
+
+    if (this._isMounted) {
+
+      try {
+        const response = await Api.getMypickList(token, start, limit);
+        if(!response.flag) {
+          const data = start === 1 ? response : this.state.mybetresult.concat(response);
+          this.setState({
+            mybetresult: data,
+            progressStatus: false,
+          });
+        }
+      } catch(err) {
+        console.warn('err', err);
+      }
+      
     }
     
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   _keyExtractor = (item, index) => item.id;
 
   _renderItem = ({ item }) => (
-    <DrawResultListItem
+    <MyDrawListItem
       id={item.id}
-      drawdate={item.drawdate}
-      drawtime={item.drawtime}
-      winners={item.winners}
-      result={item.result}
+      drawdate={item.bet_date}
+      drawtime={item.bet_draw}
+      betamount={item.bet_amt}
+      betnumber={item.bet_number}
       navigation={this.props.navigation}
     />
   );
@@ -80,14 +96,8 @@ export class BetResult extends Component {
           style={repositoriesListStyles.screenStyle}
         >
           
-          {/* <ImageBackground
-            source={backgroundImage}
-            style={repositoriesListStyles.container}
-            imageStyle={{ opacity: 0.3 }}
-          >
-            <ScrollView contentContainerStyle={repositoriesListStyles.view}> */}
                 <FlatList
-                  data={this.state.drawresult}
+                  data={this.state.mybetresult}
                   onEndReachedThreshold={0.01}
                   keyExtractor={this._keyExtractor}
                   renderItem={this._renderItem}
@@ -96,19 +106,7 @@ export class BetResult extends Component {
                     <View style={repositoriesListStyles.itemSeparatorStyle} />
                   )}
                 />
-                {/* <Text style={repositoriesListStyles.header1}>{this.props.activeRoute.name}</Text>
-                <Text style={repositoriesListStyles.header1}>{this.props.login}</Text>
-                <Text style={repositoriesListStyles.text}>
-                    Book your next trip by clicking the button below.
-                </Text>
-                <Button
-                  title="Book your trip"
-                  style={repositoriesListStyles.button}
-                  onPress={() => { this.props.navigateTo('Drawing'); }}
-                /> */}
                 {this.renderProgress()}
-            {/* </ScrollView>
-          </ImageBackground> */}
         </Container>
         
       </StyleProvider>
@@ -118,7 +116,7 @@ export class BetResult extends Component {
 
   dispatchGetRepos() {
     let token = 'temp_token';
-    this.getDrawResultApi(
+    this.getMyBetApi(
       token, 
       this.getNextListPage(),
       consts.BASE_PAGE_LIMIT
@@ -127,7 +125,7 @@ export class BetResult extends Component {
 
   getNextListPage() {
     return (
-      Math.ceil(this.state.drawresult.length / consts.BASE_PAGE_LIMIT) + 1
+      Math.ceil(this.state.mybetresult.length / consts.BASE_PAGE_LIMIT) + 1
     );
   }
 
@@ -219,7 +217,7 @@ const repositoriesListStyles = {
   },
 };
 
-BetResult.propTypes = {
+MyBet.propTypes = {
   activeRoute: PropTypes.shape({
     name: PropTypes.string.isRequired,
     screen: PropTypes.any.isRequired,
@@ -241,5 +239,5 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BetResult);
+)(MyBet);
 

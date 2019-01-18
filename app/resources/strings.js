@@ -31,5 +31,7 @@ module.exports = new LocalizedStrings({
     clearall: 'Clear All',
     betamount: 'Bet Amount',
     totalamount: 'Total Amount',
+    Coin: 'Coin',
+    Pay: 'Pay',
   }
 });

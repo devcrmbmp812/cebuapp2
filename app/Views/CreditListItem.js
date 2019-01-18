@@ -11,18 +11,27 @@ import {
   Image,
   Dimensions
 } from "react-native";
-import consts from "../const";
-//import circleImage from "../images/circle.png";
-import logoImage from "../img/logo.png";
+import { Button } from "native-base";
+
+import strings from "../resources/strings";
+import dimens from "../resources/dimens";
 import colors from "../resources/colors";
+import logoImage from "../img/logo.png";
+import coinImage from "../img/coin.jpg";
+import dollarImage from "../img/dollar.png";
+
 const { height, width } = Dimensions.get("window");
-export default class DrawResultListItem extends React.PureComponent {
+export default class CreditListItem extends React.PureComponent {
   _onPress = () => {
   };
 
   _getChar = (string,index) => {
     return string.split('')[index];
   };
+
+  onPayPress = () => {
+    
+  }
 
   render() {
     return (
@@ -36,21 +45,28 @@ export default class DrawResultListItem extends React.PureComponent {
             />
           </View>
           <View style={itemStyles.leftpanel}>
-            <Text style={itemStyles.itemTitleStyle}>{this.props.drawtime}  {this.props.drawdate}</Text>
+            
+            
             <View style={itemStyles.container}>
-              <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,0): 0}</Text>
-              </View>
-              <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,1): 0}</Text>
-              </View>
-              <View style={itemStyles.circleimage}>
-                <Text style={{color:'white', fontSize: 30}}>{this.props.result? this._getChar(this.props.result,2): 0}</Text>
-              </View>
+              <Text style={itemStyles.itemTitleStyle}>Coin:</Text>
+              
+              <Text style={itemStyles.itemTitleStyle}>{this.props.coin}</Text>
+              <Image
+                style={{width: 20, height: 20}}
+                source={coinImage}
+              />
+              
             </View>
-            <Text style={itemStyles.itemDescriptionStyle}>
-              Winners {this.props.winners}
-            </Text>
+            <View style={itemStyles.container}>
+            {/* <Image
+                style={{width: 40, height: 40}}
+                source={dollarImage}
+              /> */}
+              <Text style={itemStyles.itemTitleStyle}>{this.props.cash}</Text>
+              <Button style={itemStyles.buttonSubmitStyle} onPress={this.onPayPress}>
+                <Text style={itemStyles.buttonBoldStyle}>{strings.Pay}</Text>
+              </Button>
+            </View>
           </View>
         </View>
       </TouchableHighlight>
@@ -59,6 +75,20 @@ export default class DrawResultListItem extends React.PureComponent {
 }
 
 const itemStyles = {
+  buttonBoldStyle: {
+    color: "black",
+    fontSize: dimens.buttontexxt_size
+  },
+  buttonSubmitStyle: {
+    marginTop: dimens.margin_medium,
+    marginHorizontal: dimens.margin_large,
+    borderRadius: 20,
+    alignSelf: "stretch",
+    justifyContent: "center",
+    backgroundColor: "white",
+    borderColor: colors.circleColor,
+    borderWidth: 1
+  },
   container: {
     flex: 2,
     flexDirection: "row",
@@ -71,13 +101,14 @@ const itemStyles = {
   },
   rightpanel: {
     paddingLeft: width/40,
+    backgroundColor: colors.whiteColor
   },
   leftpanel: {
      //flex: 1,
      //flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
-    padding: width/40,
+    padding: width/10,
     //justifyContent: "space-between",
     //paddingLeft: width/30,
     //width: width/2
@@ -88,8 +119,8 @@ const itemStyles = {
     flex: 1,    
   },
   circleimage: {
-    height: height/10,
-    width: width/6,
+    height: 80,
+    width: 80,
     borderRadius: 40,
     backgroundColor:'#ff00ff',
     justifyContent: 'center',
@@ -101,6 +132,7 @@ const itemStyles = {
   itemStyle: {
     //marginHorizontal: 4,
     borderColor: "lightgrey",
+    
     elevation: 4,
     borderRadius: 4,
     borderWidth: 1,
@@ -111,7 +143,8 @@ const itemStyles = {
   itemTitleStyle: {
     color: "black",
     fontSize: 20,
-    padding: 10
+    padding: 10,
+    paddingRight: 30,
   },
   itemDescriptionStyle: {
     color: "black",
