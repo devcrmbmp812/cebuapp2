@@ -44,19 +44,25 @@ export class BetResult extends Component {
 
   componentDidMount() {
     this._isMounted = true;
+    this.setState({progressStatus: true});
     let token = 'temp_token';
     this.getDrawResultApi(token, 1, consts.BASE_PAGE_LIMIT);
   }
 
   async getDrawResultApi(token, start, limit) {
     if (this._isMounted) {
-      const response = await Api.getDrawresults(token, start, limit);
-      if(response) {
-        const data = start === 1 ? response : this.state.drawresult.concat(response);
-        this.setState({
-          drawresult: data,
-          progressStatus: false,
-        });
+      try{
+        const response = await Api.getDrawresults(token, start, limit);
+        
+        if(response.length) {
+          const data = start === 1 ? response : this.state.drawresult.concat(response);
+          this.setState({
+            drawresult: data,
+            progressStatus: false,
+          });
+        }
+      } catch(err) {
+        console.warn('err', err);
       }
     }
   }

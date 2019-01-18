@@ -32,6 +32,8 @@ export class Drawing extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    _isMounted = false;
+
     this.state = {
       selected: 0,
       firstValue:0,
@@ -48,20 +50,35 @@ export class Drawing extends React.PureComponent {
     this.submitQuickPickApi = this.submitQuickPickApi.bind(this);
   }
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
   async submitQuickPickApi(token, bet_number, bet_type, bet_amount) {
-    
-    
-    const quickpickresult = await Api.submitQuickPick(token, bet_number, bet_type, bet_amount);
-    if (!quickpickresult.message) {
-      this.setState({
-        submitStatus: true,
-      });
-    } else {
-      this.setState({
-        submitStatus: false,
-      });
+
+    if (this._isMounted) {
+      try {
+        const quickpickresult = await Api.submitQuickPick(token, bet_number, bet_type, bet_amount);
+        if (quickpickresult.success) {
+          
+          this.setState({
+            submitStatus: true,
+          });
+        } else {
+          this.setState({
+            submitStatus: false,
+          });
+        }
+      } catch(err) {
+        console.warn('err', err);
+      }
     }
+
     
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   componentDidUpdate() {
@@ -71,6 +88,7 @@ export class Drawing extends React.PureComponent {
   proceed() {
     let status = this.state.submitStatus;
     if(status) {
+      
       Alert.alert(
         'Save status!',
         `Save Successfully`,
@@ -80,7 +98,6 @@ export class Drawing extends React.PureComponent {
         ],
         { cancelable: false }
       );
-
       this.moveMyBet();
     } 
   }

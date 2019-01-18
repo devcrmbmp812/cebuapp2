@@ -70,7 +70,7 @@ export function submitQuickPick(token, bet_number, bet_type, bet_amount) {
   quickpickData.append("bet_type", bet_type);
   quickpickData.append("bet_amount", bet_amount);
 
-  return fetch(`http://192.168.10.109/api/drawresult/submitquickpick`, {
+  return fetch(consts.API_ENDPOINT + `drawresult/submitquickpick`, {
     method: "POST",
     headers: {
       Accept: "application/json",
